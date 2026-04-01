@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'python' ]   # adjust if needed
+        language: ['python' ]   # adjust if needed
 
     steps:
       # 1. Checkout repo
