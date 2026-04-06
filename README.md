@@ -11,23 +11,23 @@ Managing sensitive credentials across personal and professional accounts becomes
 
 ### Authentication & Vault Security
 
-- ● **Master Password Protection:** Vault access is protected by a master password, and plaintext secrets are never persisted directly.
-- ● **Strong Key Derivation:** Argon2id-based derivation hardens password-to-key generation against brute-force attacks.
-- ● **Encrypted Credential Storage:** Credential entries are encrypted before being written to the local database.
-- ● **Clipboard Safety Controls:** Sensitive values copied to clipboard can be auto-cleared to reduce leakage risk.
+- **Master Password Protection:** Vault access is protected by a master password, and plaintext secrets are never persisted directly.
+- **Strong Key Derivation:** Argon2id-based derivation hardens password-to-key generation against brute-force attacks.
+- **Encrypted Credential Storage:** Credential entries are encrypted before being written to the local database.
+- **Clipboard Safety Controls:** Sensitive values copied to clipboard can be auto-cleared to reduce leakage risk.
 
 ### Credential Management
 
-- ● **Organized Vault Structure:** Group credentials by folders and manage favorites for faster access.
-- ● **Quick Search & Details View:** Find and inspect credentials efficiently through searchable lists and detail panels.
-- ● **Credential Creation UX:** Dedicated add/edit flows improve consistency when storing account secrets.
-- ● **Logo Enrichment:** Website/domain logos are fetched and cached to make entries easier to recognize visually.
+- **Organized Vault Structure:** Group credentials by folders and manage favorites for faster access.
+- **Quick Search & Details View:** Find and inspect credentials efficiently through searchable lists and detail panels.
+- **Credential Creation UX:** Dedicated add/edit flows improve consistency when storing account secrets.
+- **Logo Enrichment:** Website/domain logos are fetched and cached to make entries easier to recognize visually.
 
 ### Desktop Experience & Operations
 
-- ● **Fluent QML Interface:** Desktop UI is built with PyQt6 + QML for smooth, modern interactions.
-- ● **Offline-First Operation:** Core functionality works locally without requiring external APIs or hosted services.
-- ● **Portable Build Support:** Project can be packaged into an executable for easier distribution.
+- **Fluent QML Interface:** Desktop UI is built with PyQt6 + QML for smooth, modern interactions.
+- **Offline-First Operation:** Core functionality works locally without requiring external APIs or hosted services.
+- **Portable Build Support:** Project can be packaged into an executable for easier distribution.
 
 ## Architecture
 
@@ -35,7 +35,7 @@ Managing sensitive credentials across personal and professional accounts becomes
     <img src="diagram/Architecture.png" alt="VaultLock Architecture" width="640" style="object-fit: contain;" />
 </p>
 
-
+## Flow
 1. User logs in with master password.
 2. Vault key is derived locally using Argon2id parameters and salt.
 3. App decrypts only required data in memory for active operations.
