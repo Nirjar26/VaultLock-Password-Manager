@@ -1,184 +1,126 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/Platform-Windows%2011-0078D4?style=flat-square&logo=windows11&logoColor=white" />
-<img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
-<img src="https://img.shields.io/badge/Encryption-AES--256%20%2B%20Argon2id-00C853?style=flat-square&logo=shield&logoColor=white" />
-<img src="https://img.shields.io/badge/UI-PyQt6%20%2F%20QML-41CD52?style=flat-square&logo=qt&logoColor=white" />
-<img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" />
+# VaultLock
 
-<br/>
-<br/>
-
-# 🔐 VaultLock
-
-### Zero-Knowledge Offline Password Manager
-
-**AES-256 encryption · Argon2id hashing · Windows 11 Fluent UI · 100% local · No cloud, no telemetry, no trust required**
-
-[Features](#-features) · [Security Model](#-security-model) · [Getting Started](#-getting-started) · [Architecture](#-architecture) · [Build](#-build-portable-exe)
+### Zero-Knowledge Offline Password Manager for secure, local credential storage
 
 </div>
 
----
+## Problem Statement
+Most password managers depend on cloud infrastructure, which introduces trust, privacy, and breach exposure concerns.
+VaultLock solves this by keeping everything local: encryption, storage, and access control happen fully on-device.
+Your master password and plaintext credentials never leave your machine.
 
-## Why VaultLock?
+## Features
+- ● **Zero-knowledge vault:** All credential protection and key handling happen locally, with no cloud dependency.
+- ● **Strong cryptography:** Credentials are encrypted with AES-based primitives and secured with Argon2id-derived keys.
+- ● **Organized storage:** Credentials can be grouped with folders and marked as favorites for quick access.
+- ● **Fast lookup:** Search and detail panels make finding account data quick during daily use.
+- ● **Clipboard safety:** Copied secrets are automatically cleared from clipboard after use.
+- ● **Logo enrichment:** Domain logos are fetched and cached to improve visual identification.
+- ● **Modern desktop UI:** Fluent-style QML interface provides a clean Windows-native experience.
+- ● **Portable distribution:** Build a self-contained executable for easy local deployment.
 
-Most password managers phone home. VaultLock doesn't.
+## Architecture / Flow
+<div align="center">
+    <img src="diagram/Architecture.png" alt="VaultLock Architecture Diagram" width="680" />
+</div>
 
-Your master password never leaves your machine. Your vault never touches a server. The encryption key is derived locally, used locally, and discarded. If you lose your master password, the data is gone — by design. That's what zero-knowledge means.
+Flow summary:
+1. User authenticates with master password.
+2. Key is derived via Argon2id using local salt.
+3. Credentials are encrypted/decrypted locally.
+4. Data is persisted in local SQLite database.
+5. UI reads decrypted data only in memory for active session.
 
-Built for engineers who want to understand exactly what's protecting their credentials.
+Note: If you do not yet have an architecture image, add one at ./vaultlock/assets/architecture.png.
 
----
+## Tech Stack
+Frontend:
+- PyQt6
+- QML (Qt Quick)
 
-## ✦ Features
-
-| Feature | Detail 
-|---|---|
-| **Zero-knowledge architecture** | Master password never stored or transmitted |
-| **AES-256 encryption** | Fernet (AES-128-CBC + HMAC-SHA256) for all vault data |
-| **Argon2id key derivation** | PHC winner — resistant to GPU brute-force & side-channel attacks |
-| **Auto-clear clipboard** | Copied passwords purge from clipboard automatically |
-| **Smart logo fetching** | SVG/PNG logos fetched and cached per saved site |
-| **Organization** | Folders, favorites, and real-time fuzzy search |
-| **Local SQLite backend** | Your data stays on your machine — always |
-| **Windows 11 Fluent UI** | Native Mica Alt backdrop, dark mode, smooth QML transitions |
-| **Portable build** | Single `.exe` via PyInstaller — no Python required to run |
-
----
-
-## 🔐 Security Model
-
-Understanding the threat model is as important as the feature list.
-
-```
-Master Password
-      │
-      ▼
-  Argon2id KDF  ──── salt (random, stored in DB)
-      │
-      ▼
-  Derived Key (never stored)
-      │
-      ▼
-  Fernet (AES-128-CBC + HMAC-SHA256)
-      │
-      ▼
-  Encrypted Vault  ──── vault.db (SQLite, local only)
-```
-
-**What is stored:** Argon2id salt, encrypted ciphertext, encrypted metadata  
-**What is never stored:** Master password, derived key, plaintext credentials  
-**Attack resistance:** GPU brute-force (Argon2id memory hardness), MITM (no network), clipboard sniffing (auto-clear)
-
-> ⚠️ **Important:** If your master password is lost, your vault cannot be recovered. There is no reset flow. This is intentional.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
+Backend / Application Logic:
 - Python 3.10+
-- Git
-- Windows 10/11 (for native Fluent UI effects)
 
-### Installation
+Database:
+- SQLite
 
+Security / Crypto:
+- cryptography
+- argon2-cffi
+
+Build / Packaging:
+- PyInstaller
+
+## How It Works
+1. On first run, user creates a master password.
+2. VaultLock derives a secure key locally using Argon2id.
+3. New credentials are encrypted before being written to SQLite.
+4. Credential list, folder tree, and details are rendered in QML.
+5. Copy actions are protected by auto-clear clipboard behavior.
+
+## Installation / Setup
 ```bash
-# Clone the repository
 git clone https://github.com/Nirjar26/VaultLock---Password-Manager.git
 cd VaultLock---Password-Manager
 
-# Create and activate a virtual environment
 python -m venv .venv
-.\.venv\Scripts\activate
-
-# Install dependencies
+.venv\Scripts\activate
 pip install -r requirements.txt
 
-# Launch
 python main.py
 ```
 
-### First Run
+## Environment Variables
+No mandatory environment variables are required for local usage.
 
-1. Set a strong master password — this is the only key to your vault
-2. VaultLock creates `vaultlock/database/vault.db` automatically
-3. Add your first credential via the **+** button
-4. Logos are fetched automatically for recognized domains
-
----
-
-## 🏗️ Architecture
-
+Optional examples:
+```env
+APP_ENV=development
+VAULTLOCK_LOG_LEVEL=INFO
 ```
-VaultLock/
-├── main.py                    # Entry point — bootstraps Qt app
-├── build.py                   # PyInstaller build script
+
+## API Endpoints
+Not applicable for this project.
+VaultLock is an offline desktop app and does not expose HTTP API endpoints.
+
+## Folder Structure
+```text
+.
+├── main.py
+├── build.py
+├── convert_icon.py
 ├── requirements.txt
-│
+├── README.md
+├── release/
+│   └── config/
 └── vaultlock/
+    ├── __init__.py
+    ├── assets/
+    │   └── logos/
+    ├── controllers/
+    │   └── main_controller.py
     ├── core/
-    │   ├── encryption_service.py   # AES-256 + Argon2id — all crypto lives here
-    │   └── config.py               # App-wide constants and paths
-    │
-    ├── ui/
-    │   └── *.qml                   # Qt Quick / QML interface files
-    │
+    │   ├── config.py
+    │   └── window_effects.py
+    ├── database/
+    │   ├── __init__.py
+    │   └── db_manager.py
     ├── services/
-    │   ├── logo_service.py         # SVG/PNG logo fetch + cache
-    │   └── password_generator.py   # Secure random password generation
-    │
-    └── database/
-        └── vault.db                # Created at runtime — never committed
+    │   ├── encryption_service.py
+    │   └── logo_manager.py
+    └── ui/
+        ├── Main.qml
+        └── ...
 ```
 
-### Key design decisions
+## License
+MIT License
 
-- **No ORM.** Direct SQLite3 via Python stdlib — minimal attack surface, no dependency on third-party DB layer
-- **Crypto isolated.** All encryption/decryption lives in `encryption_service.py` — nothing else touches keys
-- **QML for UI.** Separates interface from logic cleanly; enables smooth animations without blocking the main thread
-- **PyInstaller for distribution.** Single-folder portable build — users don't need Python installed
+## Author / Contact
+Nirjar Goswami
 
----
-
-## 📦 Build Portable .exe
-
-```bash
-python build.py
-```
-
-Output is written to `/release/VaultLock/VaultLock.exe` — fully self-contained, no Python runtime required.
-
-> The built executable stores `vault.db` in the same directory as the `.exe` for easy backups and portability.
-
----
-
-## 🔧 Dependencies
-
-| Package | Purpose |
-|---|---|
-| `PyQt6` | Qt bindings for Python — window, QML engine |
-| `argon2-cffi` | Argon2id password hashing |
-| `cryptography` | Fernet (AES-256) encryption |
-| `pyperclip` | Clipboard access + auto-clear |
-| `requests` | Logo fetching from remote sources |
-
-Full list with pinned versions in [`requirements.txt`](requirements.txt).
-
----
-
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-<div align="center">
-
-Built by [Nirjar Goswami](https://nirjxr.dev) · [LinkedIn](https://www.linkedin.com/in/nirjarbharthigoswami-b593633a7) · [Portfolio](https://nirjxr.dev)
-
-*If this project helped you, consider starring the repo ⭐*
-
-</div>
+GitHub: https://github.com/Nirjar26
+Portfolio: https://nirjxr.dev
+LinkedIn: https://www.linkedin.com/in/nirjarbharthigoswami-b593633a7
