@@ -1,98 +1,90 @@
 <div align="center">
-
-# VaultLock
-
-### Zero-Knowledge Offline Password Manager for secure, local credential storage
-
+    <h1>VaultLock</h1>
+    <p>Zero-knowledge offline password manager with local encryption, secure vault controls, and a modern desktop admin experience.</p>
 </div>
 
 ## Problem Statement
-Most password managers depend on cloud infrastructure, which introduces trust, privacy, and breach exposure concerns.
-VaultLock solves this by keeping everything local: encryption, storage, and access control happen fully on-device.
-Your master password and plaintext credentials never leave your machine.
+
+Managing sensitive credentials across personal and professional accounts becomes risky when secrets are stored in cloud-tied systems or scattered notes. Users need strong encryption, local control, and fast retrieval without relying on external servers. VaultLock solves this by combining offline-first security, encrypted local storage, and an organized desktop workflow in one app.
 
 ## Features
-- ● **Zero-knowledge vault:** All credential protection and key handling happen locally, with no cloud dependency.
-- ● **Strong cryptography:** Credentials are encrypted with AES-based primitives and secured with Argon2id-derived keys.
-- ● **Organized storage:** Credentials can be grouped with folders and marked as favorites for quick access.
-- ● **Fast lookup:** Search and detail panels make finding account data quick during daily use.
-- ● **Clipboard safety:** Copied secrets are automatically cleared from clipboard after use.
-- ● **Logo enrichment:** Domain logos are fetched and cached to improve visual identification.
-- ● **Modern desktop UI:** Fluent-style QML interface provides a clean Windows-native experience.
-- ● **Portable distribution:** Build a self-contained executable for easy local deployment.
 
-## Architecture / Flow
-<div align="center">
-    <img src="diagram/Architecture.png" alt="VaultLock Architecture Diagram" width="680" />
-</div>
+### Authentication & Vault Security
 
-Flow summary:
-1. User authenticates with master password.
-2. Key is derived via Argon2id using local salt.
-3. Credentials are encrypted/decrypted locally.
-4. Data is persisted in local SQLite database.
-5. UI reads decrypted data only in memory for active session.
+- ● **Master Password Protection:** Vault access is protected by a master password, and plaintext secrets are never persisted directly.
+- ● **Strong Key Derivation:** Argon2id-based derivation hardens password-to-key generation against brute-force attacks.
+- ● **Encrypted Credential Storage:** Credential entries are encrypted before being written to the local database.
+- ● **Clipboard Safety Controls:** Sensitive values copied to clipboard can be auto-cleared to reduce leakage risk.
 
-Note: If you do not yet have an architecture image, add one at ./vaultlock/assets/architecture.png.
+### Credential Management
+
+- ● **Organized Vault Structure:** Group credentials by folders and manage favorites for faster access.
+- ● **Quick Search & Details View:** Find and inspect credentials efficiently through searchable lists and detail panels.
+- ● **Credential Creation UX:** Dedicated add/edit flows improve consistency when storing account secrets.
+- ● **Logo Enrichment:** Website/domain logos are fetched and cached to make entries easier to recognize visually.
+
+### Desktop Experience & Operations
+
+- ● **Fluent QML Interface:** Desktop UI is built with PyQt6 + QML for smooth, modern interactions.
+- ● **Offline-First Operation:** Core functionality works locally without requiring external APIs or hosted services.
+- ● **Portable Build Support:** Project can be packaged into an executable for easier distribution.
+
+## Architecture
+
+<p align="center">
+    <img src="diagram/Architecture.png" alt="VaultLock Architecture" width="640" style="object-fit: contain;" />
+</p>
+
+
+1. User logs in with master password.
+2. Vault key is derived locally using Argon2id parameters and salt.
+3. App decrypts only required data in memory for active operations.
+4. Create/update credential operations encrypt data before SQLite writes.
+5. UI components render vault state, folders, and details in QML views.
 
 ## Tech Stack
-Frontend:
-- PyQt6
-- QML (Qt Quick)
 
-Backend / Application Logic:
-- Python 3.10+
-
-Database:
-- SQLite
-
-Security / Crypto:
-- cryptography
-- argon2-cffi
-
-Build / Packaging:
-- PyInstaller
+**Frontend/UI:** PyQt6, QML (Qt Quick)  
+**Backend/App Logic:** Python 3.10+  
+**Database:** SQLite  
+**Security & Crypto:** cryptography, argon2-cffi  
+**Build/Packaging:** PyInstaller
 
 ## How It Works
-1. On first run, user creates a master password.
-2. VaultLock derives a secure key locally using Argon2id.
-3. New credentials are encrypted before being written to SQLite.
-4. Credential list, folder tree, and details are rendered in QML.
-5. Copy actions are protected by auto-clear clipboard behavior.
+
+1. On first use, user sets a master password.
+2. VaultLock initializes secure local storage and cryptographic configuration.
+3. Credentials are encrypted at write time and decrypted on-demand.
+4. Folder navigation and search power quick vault discovery.
+5. Copy actions and UI safeguards reduce accidental credential exposure.
 
 ## Installation / Setup
+
 ```bash
 git clone https://github.com/Nirjar26/VaultLock---Password-Manager.git
 cd VaultLock---Password-Manager
+```
 
+```bash
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
+```
 
+```bash
+# Run application
 python main.py
 ```
 
-## Environment Variables
-No mandatory environment variables are required for local usage.
-
-Optional examples:
-```env
-APP_ENV=development
-VAULTLOCK_LOG_LEVEL=INFO
-```
-
-## API Endpoints
-Not applicable for this project.
-VaultLock is an offline desktop app and does not expose HTTP API endpoints.
-
 ## Folder Structure
+
 ```text
 .
-├── main.py
 ├── build.py
 ├── convert_icon.py
-├── requirements.txt
+├── main.py
 ├── README.md
+├── requirements.txt
 ├── release/
 │   └── config/
 └── vaultlock/
@@ -111,16 +103,17 @@ VaultLock is an offline desktop app and does not expose HTTP API endpoints.
     │   ├── encryption_service.py
     │   └── logo_manager.py
     └── ui/
-        ├── Main.qml
-        └── ...
+    ├── AddCredentialForm.qml
+    ├── LoginPage.qml
+    ├── Main.qml
+    └── ...
 ```
 
 ## License
+
 MIT License
 
 ## Author / Contact
-Nirjar Goswami
 
+Nirjar Goswami  
 GitHub: https://github.com/Nirjar26
-Portfolio: https://nirjxr.dev
-LinkedIn: https://www.linkedin.com/in/nirjarbharthigoswami-b593633a7
