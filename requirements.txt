@@ -1,6 +1,6 @@
 
 PyQt6==6.6.1
-cryptography==46.0.6
+cryptography>=42.0.8
 argon2-cffi==23.1.0
 pyperclip==1.8.2
 requests==2.33.1
