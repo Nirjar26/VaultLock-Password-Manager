@@ -4,5 +4,5 @@ cryptography>=42.0.8
 argon2-cffi==23.1.0
 pyperclip==1.8.2
 requests==2.33.1
-python-dotenv==1.0.1
+python-dotenv==1.2.2
 pyinstaller==6.19.0
